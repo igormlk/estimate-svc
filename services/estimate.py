@@ -17,7 +17,7 @@ async def create_estimate(order: ServiceOrderDTO, tenant_id: str) -> ServiceOrde
         return result
     except DuplicateKeyError:
         # Captura erro de chave duplicada e retorna um status HTTP 400
-        raise HTTPException(status_code=400, detail="Item already exists.")
+        raise HTTPException(status_code=400, detail="Estimate already exists.")
     except Exception as e:
         # Captura outros erros e retorna um status HTTP 500 (erro interno)
         raise HTTPException(status_code=500, detail=str(e))

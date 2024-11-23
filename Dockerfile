@@ -8,11 +8,12 @@ WORKDIR /app
 RUN python -m venv .venv
 COPY requirements.txt ./
 RUN .venv/bin/pip install -r requirements.txt
+RUN .venv/bin/pip install fastapi[standard]
 FROM python:3.10.12-slim
 WORKDIR /app
 COPY --from=builder /app/.venv .venv/
 COPY . .
 
-RUN pip install "fastapi[standard]"
+EXPOSE 8000
 
-CMD ["/app/.venv/bin/fastapi", "run"]
+CMD [".venv/bin/python", "main.py"]

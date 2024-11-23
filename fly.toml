@@ -7,14 +7,14 @@ app = 'estimate-svc'
 primary_region = 'gru'
 
 [env]
-  JSON_LOG=true
+  JSON_LOG=false
   BUCKET_PHOTO='volante-order-photo'
 
 [build]
 
 [http_service]
   internal_port = 8000
-  force_https = true
+  force_https = false
   auto_stop_machines = 'stop'
   auto_start_machines = true
   min_machines_running = 0
