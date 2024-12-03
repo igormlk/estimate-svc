@@ -1,10 +1,7 @@
 from fastapi import APIRouter, Form, File, UploadFile, HTTPException, Depends
 
-from mappers.estimate import map_to_service_order_dto
-from models.estimate import ServiceOrderDTO, ServiceOrderResponseDTO
 from models.photo import UploadServicePhotoDTO, UploadVehiclePhotoDTO
 from schemas.photo import ServicePhotoType, PhotoType
-from services.estimate import create_estimate
 from services.photo import upload_service_photo, upload_vehicle_photo, list_vehicle_photos, list_service_photos, \
     list_all_service_photos
 from utils.jwt import get_current_tenant_id
@@ -13,15 +10,7 @@ from utils.log_middleware import logger as log
 router = APIRouter(prefix="/v1/estimate", tags=["estimate"])
 
 
-@router.post("/")
-async def post_create_estimate(service_order: ServiceOrderDTO,
-                               tenant_id: str = Depends(get_current_tenant_id)
-                               ) -> ServiceOrderResponseDTO:
-    result = await create_estimate(service_order, tenant_id)
-    return map_to_service_order_dto(result)
-
-
-@router.post("/service/photo")
+@router.put("/service/photo")
 async def post_service_photo(
         order_id: str = Form(...),  # Obrigatório
         service_id: str = Form(...),  # Opcional
@@ -67,7 +56,7 @@ async def post_service_photo(
     }
 
 
-@router.post("/vehicle/photo")
+@router.put("/vehicle/photo")
 async def post_vehicle_photo(
         order_id: str = Form(...),
         description: str = Form(...),

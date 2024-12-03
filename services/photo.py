@@ -13,11 +13,6 @@ from schemas.photo import Photo
 
 
 async def upload_service_photo(photo: UploadServicePhotoDTO, tenant_id: str) -> Photo:
-    if not await is_estimate_exists(photo.order_id):
-        raise HTTPException(status_code=404, detail="Estimate does not exist")
-    if not await is_service_exists(photo.order_id, photo.service_id):
-        raise HTTPException(status_code=404, detail="Service does not exist")
-
     try:
         photo_entity = map_service_to_photo(photo, tenant_id)
         new_photo = await persist_photo(photo_entity)
@@ -32,9 +27,6 @@ async def upload_service_photo(photo: UploadServicePhotoDTO, tenant_id: str) -> 
 
 
 async def upload_vehicle_photo(photo: UploadVehiclePhotoDTO, tenant_id: str) -> Photo:
-    if not await is_estimate_exists(photo.order_id):
-        raise HTTPException(status_code=404, detail="Estimate does not exist")
-
     try:
         photo_entity = map_vehicle_to_photo(photo, tenant_id)
         new_photo = await persist_photo(photo_entity)
@@ -49,12 +41,6 @@ async def upload_vehicle_photo(photo: UploadVehiclePhotoDTO, tenant_id: str) -> 
 
 
 async def list_service_photos(tenant_id: str, order_id: str, service_id: str) -> List[ServicePhotoDTO]:
-    if not await is_estimate_exists(order_id):
-        raise HTTPException(status_code=404, detail="Estimate does not exist")
-
-    if not await is_service_exists(order_id, service_id):
-        raise HTTPException(status_code=404, detail="Service does not exist")
-
     photos = await find_service_photos(tenant_id, order_id, service_id)
 
     async def map_photo(photo: Photo) -> ServicePhotoDTO:
@@ -67,9 +53,6 @@ async def list_service_photos(tenant_id: str, order_id: str, service_id: str) ->
 
 
 async def list_vehicle_photos(tenant_id: str, order_id: str) -> List[VehiclePhotoDTO]:
-    if not await is_estimate_exists(order_id):
-        raise HTTPException(status_code=404, detail="Estimate does not exist")
-
     photos = await find_vehicle_photos(tenant_id, order_id)
 
     async def map_photo(photo: Photo) -> VehiclePhotoDTO:
@@ -82,9 +65,6 @@ async def list_vehicle_photos(tenant_id: str, order_id: str) -> List[VehiclePhot
 
 
 async def list_all_service_photos(tenant_id: str, order_id: str) -> List[ServicePhotoDTO]:
-    if not await is_estimate_exists(order_id):
-        raise HTTPException(status_code=404, detail="Estimate does not exist")
-
     photos = await find_all_service_photos(tenant_id, order_id)
 
     async def map_photo(photo: Photo) -> ServicePhotoDTO:
